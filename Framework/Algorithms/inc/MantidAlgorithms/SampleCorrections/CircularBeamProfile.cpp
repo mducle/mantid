@@ -66,13 +66,13 @@ IBeamProfile::Ray RectangularBeamProfile::generatePoint(
   const V3D minBound(bounds.minPoint()), maxBound(bounds.maxPoint());
   if (rngPt.X() > maxBound[m_upIdx])
     rngPt.X() = maxBound[m_upIdx];
-  else if (rngPt(X) < minBound[m_upIdx])
-    rngPt(X) = minBound[m_upIdx];
+  else if (rngPt.X() < minBound[m_upIdx])
+    rngPt.X() = minBound[m_upIdx];
 
-  if (rngPt[m_horIdx] > maxBound[m_horIdx])
-    rngPt[m_horIdx] = maxBound[m_horIdx];
-  else if (rngPt[m_horIdx] < minBound[m_horIdx])
-    rngPt[m_horIdx] = minBound[m_horIdx];
+  if (rngPt.Y() > maxBound[m_horIdx])
+    rngPt.Y() = maxBound[m_horIdx];
+  else if (rngPt.Y() < minBound[m_horIdx])
+    rngPt.Y() = minBound[m_horIdx];
   return rngRay;
 }
 
