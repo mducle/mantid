@@ -17,6 +17,7 @@
 #include "MantidKernel/Logger.h"
 
 #include "MantidQtWidgets/Common/EditLocalParameterDialog.h"
+#include "MantidQtWidgets/Common/InterfaceManager.h"
 #include "MantidQtWidgets/Common/QtPropertyBrowser/DoubleDialogEditor.h"
 #include "MantidQtWidgets/Common/QtPropertyBrowser/FilenameDialogEditor.h"
 #include "MantidQtWidgets/Common/QtPropertyBrowser/FormulaDialogEditor.h"
@@ -251,6 +252,10 @@ void FunctionTreeView::createActions() {
   m_actionRemoveConstraint = new QAction("Remove", this);
   connect(m_actionRemoveConstraint, SIGNAL(triggered()), this,
           SLOT(removeConstraint()));
+
+  m_actionFunctionHelp = new QAction("Help", this);
+  connect(m_actionFunctionHelp, SIGNAL(triggered()), this,
+          SLOT(showFunctionHelp()));
 
   setErrorsEnabled(false);
 }
@@ -1119,6 +1124,7 @@ void FunctionTreeView::popupMenu(const QPoint &) {
     if (!m_browser->properties().isEmpty()) {
       context.addAction(m_actionToClipboard);
     }
+    context.addAction(m_actionFunctionHelp);
     context.exec(QCursor::pos());
   } else if (isParameter(prop)) { // parameters
     QMenu context(this);
@@ -1661,6 +1667,22 @@ void FunctionTreeView::removeConstraint() {
   if (!constraint.isEmpty()) {
     emit parameterConstraintAdded(functionIndex, constraint);
   }
+}
+
+/**
+ * Show function help page
+ */
+void FunctionTreeView::showFunctionHelp() {
+  auto item = m_browser->currentItem();
+  if (!item)
+    return;
+  QtProperty *prop = item->property();
+  if (!isFunction(prop))
+    return;
+
+  auto f0 = getFunction(prop);
+  API::InterfaceManager().showFitFunctionHelp(
+      QString::fromStdString(f0->name()));
 }
 
 std::pair<QString, QString>

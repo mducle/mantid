@@ -253,6 +253,8 @@ protected slots:
   void removeConstraint();
   /// Update index of currently selected function
   void updateCurrentFunctionIndex();
+  // Show function help of currently selected function
+  void showFunctionHelp();
 
   //   Property change slots
 
@@ -343,6 +345,8 @@ protected:
   QAction *m_actionRemoveConstraints;
   /// Remove one constraints from current parameter
   QAction *m_actionRemoveConstraint;
+  /// Show function help menu
+  QAction *m_actionFunctionHelp;
   /// Index of currently selected function. Gets updated in
   /// updateCurrentFunctionIndex()
   boost::optional<QString> m_currentFunctionIndex;
