@@ -55,11 +55,12 @@ std::map<std::string, std::string> SetBeam::validateInputs() {
     bool h = geometryArgs->existsProperty("Height");
     bool r = geometryArgs->existsProperty("Radius");
     if (s && ((w && h) != r)) {
-      errors["Geometry"] =
-          "'Geometry' flags missing. Required flags: Shape, plus Width and Height, or Radius";
+      errors["Geometry"] = "'Geometry' flags missing. Required flags: Shape, "
+                           "plus Width and Height, or Radius";
     } else {
       std::string shape = geometryArgs->getProperty("Shape");
-      if (std::find(SHAPE_TYPE_NAME.begin(), SHAPE_TYPE_NAME.end(), shape) != SHAPE_TYPE_NAME.end()) {
+      if (std::find(SHAPE_TYPE_NAME.begin(), SHAPE_TYPE_NAME.end(), shape) !=
+          SHAPE_TYPE_NAME.end()) {
         errors["Geometry"] = "Only 'Slit' and 'Circle' shapes are supported.";
       }
     }
