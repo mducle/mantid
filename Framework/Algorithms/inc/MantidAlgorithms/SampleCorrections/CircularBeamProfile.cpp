@@ -5,7 +5,7 @@
 //   Institut Laue - Langevin & CSNS, Institute of High Energy Physics, CAS
 // SPDX - License - Identifier: GPL - 3.0 +
 #include "MantidAPI/Sample.h"
-#include "MantidAlgorithms/SampleCorrections/RectangularBeamProfile.h"
+#include "MantidAlgorithms/SampleCorrections/CircularBeamProfile.h"
 #include "MantidGeometry/Instrument/ReferenceFrame.h"
 #include "MantidGeometry/Instrument/SampleEnvironment.h"
 #include "MantidGeometry/Objects/BoundingBox.h"
@@ -40,12 +40,15 @@ CircularBeamProfile(const Geometry::ReferenceFrame &frame,
  * @param rng A reference to a random number generator
  * @return An IBeamProfile::Ray describing the start and direction
  */
-IBeamProfile::Ray RectangularBeamProfile::generatePoint(
+IBeamProfile::Ray CircularBeamProfile::generatePoint(
     Kernel::PseudoRandomNumberGenerator &rng) const {
   V3D pt;
   const double R = rng.nextValue() * m_radius;
   const double theta = rng.nextValue() * 360.0;
   pt.spherical(R, theta, m_beamIdx);
+  pt[0] += center[0];
+  pt[1] += center[1];
+  pt[2] += center[2];
   return {pt, m_beamDir};
 }
 
@@ -58,7 +61,7 @@ IBeamProfile::Ray RectangularBeamProfile::generatePoint(
  * allowed region for the generated point.
  * @return An IBeamProfile::Ray describing the start and direction
  */
-IBeamProfile::Ray RectangularBeamProfile::generatePoint(
+IBeamProfile::Ray CircularBeamProfile::generatePoint(
     Kernel::PseudoRandomNumberGenerator &rng,
     const Geometry::BoundingBox &bounds) const {
   auto rngRay = generatePoint(rng);
@@ -81,7 +84,7 @@ IBeamProfile::Ray RectangularBeamProfile::generatePoint(
  * @param sampleBox A reference to the bounding box of the sample
  * @return A BoundingBox defining the active region
  */
-Geometry::BoundingBox RectangularBeamProfile::defineActiveRegion(
+Geometry::BoundingBox CircularBeamProfile::defineActiveRegion(
     const Geometry::BoundingBox &sampleBox) const {
   // In the beam direction use the maximum sample extent other wise restrict
   // the active region to the width/height of beam

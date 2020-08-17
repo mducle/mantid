@@ -37,14 +37,15 @@ public:
     const double radius(0.5);
     // Test-frame is non-standard X=beam
     CircularBeamProfile profile(createTestFrame(), V3D(), radius);
+    // frame, center, radius
 
     MockRNG rng;
-    const double rand(0.75);
+    const double rand(0.5);
     EXPECT_CALL(rng, nextValue())
         .Times(Exactly(2))
         .WillRepeatedly(Return(rand));
     auto ray = profile.generatePoint(rng);
-    TS_ASSERT_EQUALS(V3D(0.0, 0.025, 0.05), ray.startPos);
+    TS_ASSERT_EQUALS(V3D(0.0, 0.0, -0.25), ray.startPos);
     TS_ASSERT_EQUALS(V3D(1.0, 0, 0), ray.unitDir);
   }
 
@@ -53,17 +54,17 @@ public:
     using namespace MonteCarloTesting;
     using namespace ::testing;
 
-    const double width(0.1), height(0.2);
+    const double radius(0.5);
     const V3D center(1, 2, -3);
-    RectangularBeamProfile profile(createTestFrame(), center, width, height);
+    CircularBeamProfile profile(createTestFrame(), center, radius);
 
     MockRNG rng;
-    const double rand(0.75);
+    const double rand(0.5);
     EXPECT_CALL(rng, nextValue())
         .Times(Exactly(2))
         .WillRepeatedly(Return(rand));
     auto ray = profile.generatePoint(rng);
-    TS_ASSERT_EQUALS(V3D(1.0, 2.025, -2.95), ray.startPos);
+    TS_ASSERT_EQUALS(V3D(1.0, 2.0, -3.25), ray.startPos);
     TS_ASSERT_EQUALS(V3D(1.0, 0, 0), ray.unitDir);
   }
 
@@ -72,9 +73,15 @@ public:
     using namespace MonteCarloTesting;
     using namespace ::testing;
 
-    const double width(0.1), height(0.2);
+    const double radius(0.5);
     const V3D center(1, 2, -3);
-    RectangularBeamProfile profile(createTestFrame(), center, width, height);
+    // values calculated using polar calculations from V3D class
+    const double testX = cos(1) * 0.25;
+    const double testY = sin(1) * 0.25;
+    const double testZ = 0;
+    const V3D testVec(testX, testY, testZ);
+    const double DBL_EPS = std::numeric_limits<double>::epsilon();
+    CircularBeamProfile profile(createTestFrame(), center, radius);
 
     MockRNG rng;
     const double rand1(0.75), rand2(0.25);
@@ -83,16 +90,19 @@ public:
         .WillOnce(Return(rand1))
         .WillRepeatedly(Return(rand2));
     auto ray = profile.generatePoint(rng);
-    TS_ASSERT_EQUALS(V3D(1.0, 1.975, -2.95), ray.startPos);
+    TS_ASSERT_DELTA(testX + center.X(), ray.startPos.X(), DBL_EPS);
+    TS_ASSERT_DELTA(testY + center.Y(), ray.startPos.Y(), DBL_EPS);
+    TS_ASSERT_DELTA(testZ + center.X(), ray.startPos.Z(), DBL_EPS);
     TS_ASSERT_EQUALS(V3D(1.0, 0, 0), ray.unitDir);
+  }
   }
 
   void test_DefineActiveRegion_beam_larger_than_sample() {
     using Mantid::API::Sample;
     using Mantid::Kernel::V3D;
-    const double width(3.3), height(6.9);
+    const double width(5.0);
     const V3D center;
-    RectangularBeamProfile profile(createTestFrame(), center, width, height);
+    CircularBeamProfile profile(createTestFrame(), center, radius);
     Sample testSample;
     testSample.setShape(ComponentCreationHelper::createSphere(0.5));
 
@@ -106,17 +116,17 @@ public:
   void test_DefineActiveRegion_beam_smaller_than_sample() {
     using Mantid::API::Sample;
     using Mantid::Kernel::V3D;
-    const double width(0.1), height(0.2);
+    const double radius(0.1);
     const V3D center;
-    RectangularBeamProfile profile(createTestFrame(), center, width, height);
+    CircularBeamProfile profile(createTestFrame(), center, radius);
     Sample testSample;
     testSample.setShape(ComponentCreationHelper::createSphere(0.5));
 
     auto region =
         profile.defineActiveRegion(testSample.getShape().getBoundingBox());
     TS_ASSERT(region.isNonNull());
-    TS_ASSERT_EQUALS(V3D(-0.5, -0.05, -0.1), region.minPoint());
-    TS_ASSERT_EQUALS(V3D(0.5, 0.05, 0.1), region.maxPoint());
+    TS_ASSERT_EQUALS(V3D(-0.5, -0.1, -0.1), region.minPoint());
+    TS_ASSERT_EQUALS(V3D(0.5, 0.1, 0.1), region.maxPoint());
   }
 
 private:
