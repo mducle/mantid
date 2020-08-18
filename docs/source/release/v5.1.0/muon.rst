@@ -51,6 +51,7 @@ Improvements
 - Fitting tab in Muon analysis and Frequency domain analysis GUI's are now disabled when no valid fitting data is present.
 - Updated plotting to make line colours more consistent.
 - The ALC interface in workbench will now show errors by default. The error bars can also be turned on/off using the right-click plot menu.
+- Replaced Autoscale button in plotting window to a checkbox.
 
 Bug fixes
 ---------
