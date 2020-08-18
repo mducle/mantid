@@ -29,8 +29,9 @@ class QuickEditView(QtWidgets.QWidget):
         self.plot_selector.setEditable(False)
         self.x_axis_changer = AxisChangerPresenter(AxisChangerView("X"))
 
-        self.autoscale = QtWidgets.QPushButton("Autoscale y")
-        self.autoscale.setStyleSheet("background-color:lightgrey")
+        self.autoscale = QtWidgets.QCheckBox("Autoscale y")
+        #self.autoscale = QtWidgets.QPushButton("Autoscale y")
+        #self.autoscale.setStyleSheet("background-color:lightgrey")
 
         self.y_axis_changer = AxisChangerPresenter(AxisChangerView("Y"))
 
@@ -103,11 +104,18 @@ class QuickEditView(QtWidgets.QWidget):
 
     """ auto scale selection """
 
+    def disable_yaxis_changer(self):
+        self.y_axis_changer.view.setEnabled(False)
+
+    def enable_yaxis_changer(self):
+        self.y_axis_changer.view.setEnabled(True)
+
     def connect_autoscale_changed(self, slot):
-        self.autoscale.clicked.connect(slot)
+        self.autoscale.stateChanged.connect(slot)
 
     """ errors selection """
-
+    def check_autoscale_state(self):
+        return self.autoscale.checkState()
     # need our own signal that sends a bool
 
     def _emit_errors(self):
