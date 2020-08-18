@@ -51,7 +51,8 @@ Improvements
 - Fitting tab in Muon analysis and Frequency domain analysis GUI's are now disabled when no valid fitting data is present.
 - Updated plotting to make line colours more consistent.
 - The ALC interface in workbench will now show errors by default. The error bars can also be turned on/off using the right-click plot menu.
-- Replaced Autoscale button in plotting window to a checkbox.
+- Have updated the FDA GUI so that it functions correctly for frequency transforms and single fits.
+- Replaced Autoscale button in plotting window with a checkbox.
 
 Bug fixes
 ---------
@@ -61,6 +62,8 @@ Bug fixes
 - Fixed an issue where switching to simultaneous fit mode was occasionally throwing an exception.
 - Fixed an issue where loading additional data in simultaneous fit mode was throwing an exception.
 - Fixed an issue where mantid crashed when the muon analysis plotting window crashed was resized to be too small.
+- Fixed an issue with setting the current workspace before adding a function.
+- Fixed an issue with the results tab not updating correctly after multiple fits with different functions.
 
 Elemental Analysis 
 ##################
