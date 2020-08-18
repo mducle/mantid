@@ -492,21 +492,6 @@ MonteCarloAbsorption::createBeamProfile(const Instrument &instrument,
                                                   beamWidth, beamHeight);
 }
 
-auto beamWidthParam = source -> getNumberParameter("beam-width");
-auto beamHeightParam = source -> getNumberParameter("beam-height");
-
-if (beamWidthParam.size() == 1 && beamHeightParam.size() == 1) {
-  beamWidth = beamWidthParam[0];
-  beamHeight = beamHeightParam[0];
-} else {
-  const auto bbox = sample.getShape().getBoundingBox().width();
-  beamWidth = bbox[frame->pointingHorizontal()];
-  beamHeight = bbox[frame->pointingUp()];
-}
-return std::make_unique<RectangularBeamProfile>(*frame, source->getPos(),
-                                                beamWidth, beamHeight);
-} // namespace Algorithms
-
 void MonteCarloAbsorption::interpolateFromSparse(
     MatrixWorkspace &targetWS, const SparseWorkspace &sparseWS,
     const Mantid::Algorithms::InterpolationOption &interpOpt) {
@@ -530,5 +515,5 @@ void MonteCarloAbsorption::interpolateFromSparse(
   }
   PARALLEL_CHECK_INTERUPT_REGION
 }
-} // namespace Mantid
+} // namespace Algorithms
 } // namespace Mantid
