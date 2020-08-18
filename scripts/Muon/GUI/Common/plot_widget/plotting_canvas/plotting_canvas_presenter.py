@@ -28,8 +28,8 @@ class PlottingCanvasPresenter(PlottingCanvasPresenterInterface):
 
         # connection to quick edit widget
         self._setup_quick_edit_widgeet()
+
         self.autoscale_observer = GenericObserver(self._options_presenter.uncheck_autoscale)
-        self._view.toolBar.uncheck_autoscale_notifier.add_subscriber(self.autoscale_observer)
 
     def _setup_quick_edit_widgeet(self):
         self._options_presenter.connect_errors_changed(self.handle_error_selection_changed)
@@ -37,6 +37,9 @@ class PlottingCanvasPresenter(PlottingCanvasPresenterInterface):
         self._options_presenter.connect_y_range_changed(self._handle_ylim_changed_in_quick_edit_options)
         self._options_presenter.connect_autoscale_changed(self._handle_autoscale_y_axes)
         self._options_presenter.connect_plot_selection(self._handle_subplot_changed_in_quick_edit_widget)
+
+    def _setup_autoscale_observer(self):
+        self._view.toolBar.uncheck_autoscale_notifier.add_subscriber(self.autoscale_observer)
 
     # Interface implementation
     def plot_workspaces(self, workspace_names: List[str], workspace_indices: List[int], hold_on: bool,
