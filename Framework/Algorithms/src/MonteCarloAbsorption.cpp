@@ -10,9 +10,9 @@
 #include "MantidAPI/SpectrumInfo.h"
 #include "MantidAPI/WorkspaceUnitValidator.h"
 #include "MantidAlgorithms/InterpolationOption.h"
+#include "MantidAlgorithms/SampleCorrections/CircularBeamProfile.h"
 #include "MantidAlgorithms/SampleCorrections/DetectorGridDefinition.h"
 #include "MantidAlgorithms/SampleCorrections/MCInteractionStatistics.h"
-#include "MantidAlgorithms/SampleCorrections/CircularBeamProfile.h"
 #include "MantidAlgorithms/SampleCorrections/RectangularBeamProfile.h"
 #include "MantidDataObjects/Workspace2D.h"
 #include "MantidDataObjects/WorkspaceCreation.h"
@@ -453,9 +453,9 @@ MatrixWorkspace_uptr MonteCarloAbsorption::createOutputWorkspace(
 }
 
 /**
- * Create the beam profile. Currently only supports Rectangular or Circular. The dimensions
- * are either specified by those provided by `SetBeam` algorithm or default
- * to the width and height of the samples bounding box
+ * Create the beam profile. Currently only supports Rectangular or Circular. The
+ * dimensions are either specified by those provided by `SetBeam` algorithm or
+ * default to the width and height of the samples bounding box
  * @param instrument A reference to the instrument object
  * @param sample A reference to the sample object
  * @return A new IBeamProfile object
@@ -482,7 +482,7 @@ MonteCarloAbsorption::createBeamProfile(const Instrument &instrument,
     if (beamRadiusParam.size() == 1) {
       beamRadius = beamRadiusParam[0];
       return std::make_unique<CircularBeamProfile>(*frame, source->getPos(),
-                                                      beamRadius);
+                                                   beamRadius);
     }
   } // revert to sample dimensions if no return by this point
   const auto bbox = sample.getShape().getBoundingBox().width();
@@ -490,22 +490,22 @@ MonteCarloAbsorption::createBeamProfile(const Instrument &instrument,
   beamHeight = bbox[frame->pointingUp()];
   return std::make_unique<RectangularBeamProfile>(*frame, source->getPos(),
                                                   beamWidth, beamHeight);
-  }
-
-  auto beamWidthParam = source->getNumberParameter("beam-width");
-  auto beamHeightParam = source->getNumberParameter("beam-height");
-  
-  if (beamWidthParam.size() == 1 && beamHeightParam.size() == 1) {
-    beamWidth = beamWidthParam[0];
-    beamHeight = beamHeightParam[0];
-  } else {
-    const auto bbox = sample.getShape().getBoundingBox().width();
-    beamWidth = bbox[frame->pointingHorizontal()];
-    beamHeight = bbox[frame->pointingUp()];
-  }
-  return std::make_unique<RectangularBeamProfile>(*frame, source->getPos(),
-                                                  beamWidth, beamHeight);
 }
+
+auto beamWidthParam = source -> getNumberParameter("beam-width");
+auto beamHeightParam = source -> getNumberParameter("beam-height");
+
+if (beamWidthParam.size() == 1 && beamHeightParam.size() == 1) {
+  beamWidth = beamWidthParam[0];
+  beamHeight = beamHeightParam[0];
+} else {
+  const auto bbox = sample.getShape().getBoundingBox().width();
+  beamWidth = bbox[frame->pointingHorizontal()];
+  beamHeight = bbox[frame->pointingUp()];
+}
+return std::make_unique<RectangularBeamProfile>(*frame, source->getPos(),
+                                                beamWidth, beamHeight);
+} // namespace Algorithms
 
 void MonteCarloAbsorption::interpolateFromSparse(
     MatrixWorkspace &targetWS, const SparseWorkspace &sparseWS,
@@ -530,5 +530,5 @@ void MonteCarloAbsorption::interpolateFromSparse(
   }
   PARALLEL_CHECK_INTERUPT_REGION
 }
-} // namespace Algorithms
+} // namespace Mantid
 } // namespace Mantid

@@ -129,8 +129,7 @@ void SetBeam::exec() {
     // Add the values as parameters on the source object
     pmap.addDouble(source->getComponentID(), WIDTH_PARAM_NAME, width);
     pmap.addDouble(source->getComponentID(), HEIGHT_PARAM_NAME, height);
-    pmap.addString(source->getComponentID(), SHAPE_PARAM_NAME,
-                   SHAPE_NAME_SLIT);
+    pmap.addString(source->getComponentID(), SHAPE_PARAM_NAME, SHAPE_NAME_SLIT);
   }
 }
 
