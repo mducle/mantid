@@ -31,7 +31,6 @@ class PlottingCanvasPresenter(PlottingCanvasPresenterInterface):
         self.autoscale_observer = GenericObserver(self._options_presenter.uncheck_autoscale)
 
     def _setup_quick_edit_widgeet(self):
-        self._setup_autoscale_observer()
         self._options_presenter.connect_errors_changed(self.handle_error_selection_changed)
         self._options_presenter.connect_x_range_changed(self._handle_xlim_changed_in_quick_edit_options)
         self._options_presenter.connect_y_range_changed(self._handle_ylim_changed_in_quick_edit_options)
