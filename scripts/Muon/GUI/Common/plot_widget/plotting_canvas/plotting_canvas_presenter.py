@@ -79,6 +79,7 @@ class PlottingCanvasPresenter(PlottingCanvasPresenterInterface):
     def replace_workspace_in_plot(self, workspace):
         """Replace specified workspace in the plot with a new and presumably updated instance"""
         self._view.replace_specified_workspace_in_plot(workspace)
+        self._handle_autoscale_y_axes()
 
     def replot_workspace_with_error_state(self, workspace_name, error_state):
         """Replot a workspace in the plot with a different error_state"""
@@ -230,5 +231,4 @@ class PlottingCanvasPresenter(PlottingCanvasPresenterInterface):
         for axis_number, title in enumerate(titles):
             self._view.set_title(axis_number, title)
         self._update_quickedit_widget()
-        self._handle_autoscale_y_axes()
         self._view.redraw_figure()
