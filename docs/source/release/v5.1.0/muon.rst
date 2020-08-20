@@ -33,7 +33,8 @@ New Features
 - Updated rounding for time zero and first good data to be 3 decimal places.
 - Added double pulse analysis, see :ref:`Muon home tab <muon_home_tab-ref>`.
 - Added multi-period support to the LoadMuonNexusV2 algorithm.
-- Added support for specifying which groups should be used to calculate a group.
+- Added support for specifying which periods should be used to calculate a group.
+- Added suport for loading and saving group period data from xml files.
 
 Improvements
 -------------
