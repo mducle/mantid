@@ -10,6 +10,7 @@ Modification of Chris Beaumont's mpl-modest-image package to allow the use of
 set_extent.
 """
 import matplotlib
+
 rcParams = matplotlib.rcParams
 
 import matplotlib.image as mi
@@ -23,7 +24,6 @@ IDENTITY_TRANSFORM = IdentityTransform()
 
 
 class ModestImage(mi.AxesImage):
-
     """
     Computationally modest image class.
 
@@ -62,7 +62,7 @@ class ModestImage(mi.AxesImage):
 
         if (self._A.ndim not in (2, 3) or
                 (self._A.ndim == 3 and self._A.shape[-1] not in (3, 4))):
-                raise TypeError("Invalid dimensions for image data")
+            raise TypeError("Invalid dimensions for image data")
 
         self.invalidate_cache()
 
@@ -216,7 +216,7 @@ def imshow(axes, X, cmap=None, norm=None, aspect=None,
     Unlike matplotlib version, must explicitly specify axes
     """
     if norm is not None:
-        assert(isinstance(norm, mcolors.Normalize))
+        assert (isinstance(norm, mcolors.Normalize))
     if aspect is None:
         aspect = rcParams['image.aspect']
     axes.set_aspect(aspect)
@@ -276,8 +276,8 @@ def extract_matched_slices(axes=None, shape=None, extent=None,
     xlim, ylim = axes.get_xlim(), axes.get_ylim()
 
     # Transform the limits to pixel coordinates
-    ind0 = transform.transform([min(xlim), min(ylim)])
-    ind1 = transform.transform([max(xlim), max(ylim)])
+    ind0 = transform.transform([xlim[0], ylim[0]])
+    ind1 = transform.transform([xlim[1], ylim[1]])
 
     def _clip(val, lo, hi):
         return int(max(min(val, hi), lo))
@@ -286,10 +286,12 @@ def extract_matched_slices(axes=None, shape=None, extent=None,
     # pixel margin all around. We ensure that the shape of the resulting array
     # will always be at least (1, 1) even if there is really no overlap, to
     # avoid issues.
-    y0 = _clip(ind0[1] - 5, 0, shape[0] - 1)
-    y1 = _clip(ind1[1] + 5, 1, shape[0])
-    x0 = _clip(ind0[0] - 5, 0, shape[1] - 1)
-    x1 = _clip(ind1[0] + 5, 1, shape[1])
+    # We take the min-max here so that y1 > y0 and x1>x0
+    # This allows us to index the matrix using A[x0:x1:sx, y0:y1:sy] (with positive strides s)
+    y0 = _clip(min(ind1[1], ind0[1]) - 5, 0, shape[0] - 1)
+    y1 = _clip(max(ind1[1], ind0[1]) + 5, 1, shape[0])
+    x0 = _clip(min(ind1[0], ind0[0]) - 5, 0, shape[1] - 1)
+    x1 = _clip(max(ind1[0], ind0[0]) + 5, 1, shape[1])
 
     # Determine the strides that can be used when extracting the array
     sy = int(max(1, min((y1 - y0) / 5., np.ceil(abs((ind1[1] - ind0[1]) / ext[1])))))

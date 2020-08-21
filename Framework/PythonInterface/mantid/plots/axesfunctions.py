@@ -28,6 +28,8 @@ from mantid.plots.utility import MantidAxType
 # Used for initializing searches of max, min values
 _LARGEST, _SMALLEST = float(sys.maxsize), -sys.maxsize
 
+rcParams = matplotlib.rcParams
+
 # ================================================
 # Private 2D Helper functions
 # ================================================
@@ -645,8 +647,11 @@ def imshow(axes, workspace, *args, **kwargs):
                      transpose=transpose,
                      normalize_by_bin_width=normalize_by_bin_width)
     if 'extent' not in kwargs:
+        origin = kwargs.get("origin", rcParams['image.origin'])
+        i0 = -1 if origin == "upper" else 0
+        iend = 0 if i0 == -1 else -1
         if x.ndim == 2 and y.ndim == 2:
-            kwargs['extent'] = [x[0, 0], x[0, -1], y[0, 0], y[-1, 0]]
+            kwargs['extent'] = [x[0, 0], x[0, -1], y[i0, 0], y[iend, 0]]
         else:
             kwargs['extent'] = [x[0], x[-1], y[0], y[-1]]
     return mantid.plots.modest_image.imshow(axes, z, *args, **kwargs)

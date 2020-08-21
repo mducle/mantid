@@ -136,5 +136,6 @@ Bugfixes
 - Fix crash when subscribing algorithms from a separate thread
 - The workbench launch scripts have been replaced by an executable on macOS & Windows. On Windows this will stop virus scanners
   flagging the old ``launch_workbench.exe`` as a threat and quarantining it.
+- Fixed a bug when origin=upper was passed into imshow.
 
 :ref:`Release 5.1.0 <v5.1.0>`
