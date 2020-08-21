@@ -26,7 +26,7 @@ chopper_system:
     -
       name: MERLIN Fermi
       distance: 10.1            # Distance from moderator to this chopper in metres
-      aperture_distance: 7.19   # Distance from aperture (moderator face) to this chopper (only for Fermi)
+      aperture_distance: 7.22   # Distance from aperture (moderator face) to this chopper (only for Fermi)
       packages:                 # A hash of chopper packages
         G:
           name: MERLIN G (Gadolinium)
